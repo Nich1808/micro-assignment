@@ -1,5 +1,5 @@
 server:
-  port: ${BUSINESS_PORT:8082}
+  port: ${BUSINESS_PORT:1808}
 spring:
   application:
     name: business-service

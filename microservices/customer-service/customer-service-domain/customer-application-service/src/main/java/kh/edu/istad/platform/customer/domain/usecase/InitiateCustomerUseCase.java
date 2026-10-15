@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 public class InitiateCustomerUseCase {
 
     public InitiateCustomerResult execute(InitiateCustomerCommand command) {
-        log.info("Executing initiate customer use case...");
+        log.info("Initiating onboarding workflow for new customer entry...");
 
         return null;
     }

@@ -1,5 +1,5 @@
 server:
-  port: ${PAYMENT_PORT:8083}
+  port: ${PAYMENT_PORT:1811}
 spring:
   application:
     name: payment-service
