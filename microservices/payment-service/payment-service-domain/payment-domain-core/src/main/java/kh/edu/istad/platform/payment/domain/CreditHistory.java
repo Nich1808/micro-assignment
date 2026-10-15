@@ -4,10 +4,18 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
-public record CreditHistory(UUID creditEntryId, String action, Instant createdAt) {
+public record CreditHistory(
+        UUID creditEntryId,
+        String action,
+        Instant createdAt
+) {
     public CreditHistory {
-        Objects.requireNonNull(creditEntryId, "creditEntryId is required");
-        if (action == null || action.isBlank()) throw new IllegalArgumentException("Action is required");
-        Objects.requireNonNull(createdAt, "createdAt is required");
+        Objects.requireNonNull(creditEntryId, "Credit entry identifier is required");
+
+        if (action == null || action.trim().isEmpty()) {
+            throw new IllegalArgumentException("Action description cannot be null or blank");
+        }
+
+        Objects.requireNonNull(createdAt, "Creation timestamp is required");
     }
 }

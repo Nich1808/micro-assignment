@@ -16,6 +16,7 @@ import java.util.UUID;
 public class CreateOrderUseCase {
 
     private final OrderRepository orderRepository;
+
     public Order execute(CreateOrderCommand payload) {
         log.info("Processing order creation command for customer ID: {}", payload != null ? payload.customerId() : "null");
 

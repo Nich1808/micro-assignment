@@ -10,6 +10,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import kh.edu.istad.platform.order.domain.Order;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -18,7 +22,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderJpaEntity {
+
     @Id
     @Column(name = "order_id", nullable = false)
     private UUID id;
@@ -46,28 +53,24 @@ public class OrderJpaEntity {
     @OrderColumn(name = "line_number")
     private List<OrderItemJpaValue> items = new ArrayList<>();
 
-    protected OrderJpaEntity() {} // JPA
+    public static OrderJpaEntity from(Order domainModel) {
+        OrderJpaEntity persistenceModel = new OrderJpaEntity();
+        persistenceModel.id = domainModel.id();
+        persistenceModel.customerId = domainModel.customerId();
+        persistenceModel.businessId = domainModel.businessId();
+        persistenceModel.deliveryAddress = domainModel.deliveryAddress();
+        persistenceModel.total = domainModel.total();
+        persistenceModel.status = domainModel.status().name();
+        persistenceModel.createdAt = domainModel.createdAt();
 
-    public static OrderJpaEntity from(Order order) {
-        var entity = new OrderJpaEntity();
-        entity.id = order.id();
-        entity.customerId = order.customerId();
-        entity.businessId = order.businessId();
-        entity.deliveryAddress = order.deliveryAddress();
-        entity.total = order.total();
-        entity.status = order.status().name();
-        entity.createdAt = order.createdAt();
-        entity.items = order.items().stream().map(item ->
-                new OrderItemJpaValue(item.productId(), item.quantity(), item.unitPrice())).toList();
-        return entity;
+        persistenceModel.items = domainModel.items().stream()
+                .map(item -> new OrderItemJpaValue(
+                        item.productId(),
+                        item.quantity(),
+                        item.unitPrice()
+                ))
+                .toList();
+
+        return persistenceModel;
     }
-
-    public UUID getId() { return id; }
-    public UUID getCustomerId() { return customerId; }
-    public UUID getBusinessId() { return businessId; }
-    public String getDeliveryAddress() { return deliveryAddress; }
-    public BigDecimal getTotal() { return total; }
-    public String getStatus() { return status; }
-    public Instant getCreatedAt() { return createdAt; }
-    public List<OrderItemJpaValue> getItems() { return items; }
 }

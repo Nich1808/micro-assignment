@@ -7,7 +7,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 public final class Order {
-    public enum Status { PENDING, PAID, CANCELLED }
+
+    public enum Status {
+        PENDING, PAID, CANCELLED
+    }
+
     private final UUID id;
     private final UUID customerId;
     private final UUID businessId;
@@ -17,27 +21,60 @@ public final class Order {
     private final Status status;
     private final Instant createdAt;
 
-    public Order(UUID id, UUID customerId, UUID businessId, String deliveryAddress,
-                 List<OrderItem> items, Status status, Instant createdAt) {
-        this.id = Objects.requireNonNull(id, "id is required");
-        this.customerId = Objects.requireNonNull(customerId, "customerId is required");
-        this.businessId = Objects.requireNonNull(businessId, "businessId is required");
-        if (deliveryAddress == null || deliveryAddress.isBlank())
-            throw new IllegalArgumentException("Delivery address is required");
-        if (items == null || items.isEmpty() || items.stream().anyMatch(Objects::isNull))
-            throw new IllegalArgumentException("At least one valid order item is required");
+    public Order(UUID orderId, UUID customerId, UUID businessId, String deliveryAddress,
+                 List<OrderItem> items, Status orderStatus, Instant createdAt) {
+
+        this.id = Objects.requireNonNull(orderId, "Order identifier is mandatory");
+        this.customerId = Objects.requireNonNull(customerId, "Customer identifier is required");
+        this.businessId = Objects.requireNonNull(businessId, "Business identifier is required");
+
+        if (deliveryAddress == null || deliveryAddress.trim().isEmpty()) {
+            throw new IllegalArgumentException("Valid delivery address must be provided");
+        }
         this.deliveryAddress = deliveryAddress.trim();
+
+        if (items == null || items.isEmpty() || items.stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Order must contain at least one valid item entry");
+        }
         this.items = List.copyOf(items);
-        this.total = this.items.stream().map(OrderItem::subtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-        this.status = Objects.requireNonNull(status, "status is required");
-        this.createdAt = Objects.requireNonNull(createdAt, "createdAt is required");
+
+        this.total = this.items.stream()
+                .map(OrderItem::subtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.status = Objects.requireNonNull(orderStatus, "Order status cannot be null");
+        this.createdAt = Objects.requireNonNull(createdAt, "Creation timestamp is required");
     }
-    public UUID id() { return id; }
-    public UUID customerId() { return customerId; }
-    public UUID businessId() { return businessId; }
-    public String deliveryAddress() { return deliveryAddress; }
-    public List<OrderItem> items() { return items; }
-    public BigDecimal total() { return total; }
-    public Status status() { return status; }
-    public Instant createdAt() { return createdAt; }
+
+    public UUID id() {
+        return id;
+    }
+
+    public UUID customerId() {
+        return customerId;
+    }
+
+    public UUID businessId() {
+        return businessId;
+    }
+
+    public String deliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public List<OrderItem> items() {
+        return items;
+    }
+
+    public BigDecimal total() {
+        return total;
+    }
+
+    public Status status() {
+        return status;
+    }
+
+    public Instant createdAt() {
+        return createdAt;
+    }
 }

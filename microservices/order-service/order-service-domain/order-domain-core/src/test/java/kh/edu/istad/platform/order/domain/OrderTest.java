@@ -1,19 +1,59 @@
 package kh.edu.istad.platform.order.domain;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OrderTest {
-    @Test void calculatesTotalAndRejectsEmptyItems() {
-        var item = new OrderItem(UUID.randomUUID(), 3, new BigDecimal("2.50"));
-        var id = UUID.randomUUID();
-        var order = new Order(id, id, id, "Phnom Penh", List.of(item), Order.Status.PENDING, Instant.now());
-        assertEquals(new BigDecimal("7.50"), order.total());
+
+    @Test
+    @DisplayName("Should successfully calculate aggregate total and reject orders with empty item collections")
+    void testOrderTotalCalculationAndEmptyItemValidation() {
+        // Arrange
+        UUID productId = UUID.randomUUID();
+        int requestedQuantity = 3;
+        BigDecimal itemUnitPrice = new BigDecimal("2.50");
+
+        OrderItem sampleItem = new OrderItem(productId, requestedQuantity, itemUnitPrice);
+
+        UUID orderIdentifier = UUID.randomUUID();
+        UUID customerIdentifier = UUID.randomUUID();
+        UUID businessIdentifier = UUID.randomUUID();
+        String shippingDestination = "Phnom Penh";
+        Instant timestamp = Instant.now();
+
+        // Act
+        Order activeOrder = new Order(
+                orderIdentifier,
+                customerIdentifier,
+                businessIdentifier,
+                shippingDestination,
+                List.of(sampleItem),
+                Order.Status.PENDING,
+                timestamp
+        );
+
+        // Assert - Total computation verification
+        assertEquals(new BigDecimal("7.50"), activeOrder.total());
+
+        // Assert - Empty items validation exception
         assertThrows(IllegalArgumentException.class, () ->
-                new Order(id, id, id, "Phnom Penh", List.of(), Order.Status.PENDING, Instant.now()));
+                new Order(
+                        orderIdentifier,
+                        customerIdentifier,
+                        businessIdentifier,
+                        shippingDestination,
+                        List.of(),
+                        Order.Status.PENDING,
+                        timestamp
+                )
+        );
     }
 }

@@ -2,22 +2,24 @@ package kh.edu.istad.platform.payment.persistence;
 
 import kh.edu.istad.platform.payment.application.PaymentRepository;
 import kh.edu.istad.platform.payment.domain.Payment;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
+@RequiredArgsConstructor
 public class PaymentRepositoryAdapter implements PaymentRepository {
-    private final PaymentMongoRepository mongo;
-    public PaymentRepositoryAdapter(PaymentMongoRepository mongo) { this.mongo = mongo; }
-    @Override public Payment save(Payment payment) {
-        var entry = payment.creditEntry();
-        var entryDoc = new PaymentDocument.CreditEntryDocument(entry.id().toString(),
-                entry.customerId().toString(), entry.amount(), entry.type().name());
-        var history = payment.history().stream().map(h ->
-                new PaymentDocument.CreditHistoryDocument(h.creditEntryId().toString(),
-                        h.action(), h.createdAt())).toList();
-        mongo.save(new PaymentDocument(payment.id().toString(), payment.orderId().toString(),
-                payment.customerId().toString(), payment.amount(), payment.status().name(),
-                entryDoc, history, payment.createdAt()));
-        return payment;
+
+    private final PaymentMongoRepository paymentMongoRepository;
+
+    @Override
+    public Payment save(Payment payment) {
+        log.info("Saving payment aggregate with identifier: {} for order: {}", payment.id(), payment.orderId());
+
+        PaymentDocument paymentDocument = PaymentDocument.from(payment);
+        PaymentDocument savedDocument = paymentMongoRepository.save(paymentDocument);
+
+        return savedDocument.toDomain();
     }
 }
