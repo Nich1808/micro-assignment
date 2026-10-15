@@ -4,4 +4,4 @@ spring:
   application:
     name: payment-service
   mongodb:
-    uri: ${PAYMENT_MONGO_URI:mongodb://mongod:mongod@localhost:2026/istad_payment?authSource=admin}
+    uri: ${PAYMENT_MONGO_URI:mongodb://mongod:mongod@localhost:27017/istad_payment?authSource=admin}

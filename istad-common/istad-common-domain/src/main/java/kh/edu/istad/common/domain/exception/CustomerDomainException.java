@@ -1,6 +1,6 @@
 package kh.edu.istad.common.domain.Exception;
 
-public class CustomerDomainException extends DomainException{
+public class CustomerDomainException extends RuntimeException {
     public CustomerDomainException(String message) {
         super(message);
     }

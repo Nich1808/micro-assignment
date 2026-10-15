@@ -1,7 +1,5 @@
 package kh.edu.istad.platform.payment.domain;
 
-import lombok.Getter;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -9,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Getter
 public final class Payment {
 
     public enum Status {
@@ -94,5 +91,37 @@ public final class Payment {
                 updatedHistory,
                 this.createdAt
         );
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getOrderId() {
+        return orderId;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public CreditEntry getCreditEntry() {
+        return creditEntry;
+    }
+
+    public List<CreditHistory> getHistory() {
+        return history;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 }

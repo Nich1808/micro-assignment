@@ -1,7 +1,7 @@
 server:
-  port: ${BUSINESS_PORT:1808}
+  port: ${BUSINESS_PORT:1802}
 spring:
   application:
     name: business-service
   mongodb:
-    uri: ${BUSINESS_MONGO_URI:mongodb://mongod:mongod@localhost:2026/istad_business?authSource=admin}
+    uri: ${PAYMENT_MONGO_URI:mongodb://mongod:mongod@127.0.0.1:27017/istad_payment?authSource=admin}

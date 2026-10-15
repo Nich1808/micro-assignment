@@ -1,7 +1,6 @@
-package kh.edu.istad.common.domain.exception;
+package kh.edu.istad.common.domain.Exception;
 
-public class DomainException extends RuntimeException{
-
+public class DomainException extends RuntimeException {
     public DomainException(String message) {
         super(message);
     }
@@ -9,5 +8,4 @@ public class DomainException extends RuntimeException{
     public DomainException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

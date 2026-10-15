@@ -72,14 +72,14 @@ public record PaymentDocument(
 
     public static PaymentDocument from(Payment payment) {
         return new PaymentDocument(
-                payment.id().toString(),
-                payment.orderId().toString(),
-                payment.customerId().toString(),
-                payment.amount(),
-                payment.status().name(),
-                CreditEntryDocument.from(payment.creditEntry()),
-                payment.history().stream().map(CreditHistoryDocument::from).toList(),
-                payment.createdAt()
+                payment.getId().toString(),
+                payment.getOrderId().toString(),
+                payment.getCustomerId().toString(),
+                payment.getAmount(),
+                payment.getStatus().name(),
+                CreditEntryDocument.from(payment.getCreditEntry()),
+                payment.getHistory().stream().map(CreditHistoryDocument::from).toList(),
+                payment.getCreatedAt()
         );
     }
 

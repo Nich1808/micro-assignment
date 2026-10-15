@@ -15,7 +15,7 @@ public class PaymentRepositoryAdapter implements PaymentRepository {
 
     @Override
     public Payment save(Payment payment) {
-        log.info("Saving payment aggregate with identifier: {} for order: {}", payment.id(), payment.orderId());
+        log.info("Saving payment aggregate with identifier: {} for order: {}", payment.getId(), payment.getOrderId());
 
         PaymentDocument paymentDocument = PaymentDocument.from(payment);
         PaymentDocument savedDocument = paymentMongoRepository.save(paymentDocument);
