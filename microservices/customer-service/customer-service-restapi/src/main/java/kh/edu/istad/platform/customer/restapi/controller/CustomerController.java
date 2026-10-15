@@ -16,11 +16,13 @@ import kh.edu.istad.platform.customer.restapi.dto.CustomerUpdateResponse;
 import kh.edu.istad.platform.customer.restapi.mapper.CustomerWebMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/customers")
@@ -33,42 +35,45 @@ public class CustomerController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CustomerInitiateResponse initiateCustomer(
-            @Valid @RequestBody CustomerInitiateRequest customerInitiateRequest
-            ) {
-
-        InitiateCustomerResult result = initiateCustomerUseCase.execute(
-                customerWebMapper.toCommand(customerInitiateRequest)
+    public CustomerInitiateResponse createNewCustomer(
+            @Valid @RequestBody CustomerInitiateRequest payload
+    ) {
+        log.info("Processing creation request for new customer...");
+        InitiateCustomerResult outcome = initiateCustomerUseCase.execute(
+                customerWebMapper.toCommand(payload)
         );
-        return customerWebMapper.toResponse(result);
+        return customerWebMapper.toResponse(outcome);
     }
 
-    @PutMapping("/{customerId}")
-    public CustomerUpdateResponse updateCustomer(
-            @PathVariable("customerId") UUID customerId,
-            @Valid @RequestBody CustomerUpdateRequest request
+    @PutMapping("/{id}")
+    public CustomerUpdateResponse modifyCustomer(
+            @PathVariable("id") UUID customerId,
+            @Valid @RequestBody CustomerUpdateRequest updatePayload
     ) {
-        UpdateCustomerResult result = updateCustomerUseCase.execute(
-                new UpdateCustomerCommand(customerId, request.familyName(), request.givenName())
+        log.info("Processing update request for customer ID: {}", customerId);
+        UpdateCustomerResult outcome = updateCustomerUseCase.execute(
+                new UpdateCustomerCommand(customerId, updatePayload.familyName(), updatePayload.givenName())
         );
-        return customerWebMapper.toResponse(result);
+        return customerWebMapper.toResponse(outcome);
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void customerNotFound() {
+    public void handleCustomerNotFound() {
+        log.warn("Target customer could not be found in the system.");
     }
 
     @ExceptionHandler(CustomerDomainException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public void customerConflict() {
+    public void handleCustomerDomainConflict() {
+        log.error("A domain rule violation conflict occurred.");
     }
 
-    @PutMapping("/{customerId}/deactivate")
-    public CustomerDeactivatedEvent deactivatedEvent(
-            @PathVariable("customerId") UUID customerId
+    @PutMapping("/{id}/deactivate")
+    public CustomerDeactivatedEvent deactivateAccount(
+            @PathVariable("id") UUID customerId
     ) {
+        log.info("Processing deactivation request for customer ID: {}", customerId);
         return deactivateCustomerUseCase.execute(customerId);
     }
-
 }
