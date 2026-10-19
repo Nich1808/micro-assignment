@@ -4,7 +4,5 @@ server:
 spring:
   application:
     name: customer-service
-  config:
-    import: optional:file:./microservices/customer-service/.env.local[.properties]
   mongodb:
-    uri: ${CUSTOMER_MONGO_URI:mongodb://mongod:mongod@localhost:2026/istad_customer?authSource=admin}
+    uri: mongodb://mongod:mongod@localhost:27017/istad_customer?authSource=admin
