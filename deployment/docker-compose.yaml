@@ -24,11 +24,11 @@ services:
     image: mongodb/mongodb-community-server:latest
     container_name: mongodb
     ports:
-      - "2026:27017"
+      - "2027:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongod
       - MONGO_INITDB_ROOT_PASSWORD=mongod
     volumes:
       - mongodb_vol:/data/db
     networks:
-      ite-net:
+      - ite-net
