@@ -9,6 +9,7 @@ import kh.edu.istad.platform.customer.domain.port.out.CustomerRepository;
 import kh.edu.istad.platform.customer.domain.service.CustomerDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
@@ -17,18 +18,20 @@ public class UpdateCustomerUseCase {
     private final CustomerRepository customerRepository;
     private final CustomerDomainService customerDomainService;
 
-    public UpdateCustomerResult execute(UpdateCustomerCommand command) {
-        Customer customer = customerRepository.findById(new CustomerId(command.customerId()))
-                .orElseThrow(() -> new CustomerNotFoundException(command.customerId()));
-        customerDomainService.updateCustomer(customer, command.familyName(), command.givenName());
-        customerRepository.save(customer);
-        return new UpdateCustomerResult(
-                customer.getId().value(),
-                customer.getUsername(),
-                customer.getFamilyName(),
-                customer.getGivenName(),
-                customer.getEmail().value(),
-                customer.getPhoneNumber().value()
-        );
+    public Mono<UpdateCustomerResult> execute(UpdateCustomerCommand command) {
+        return customerRepository.findById(new CustomerId(command.customerId()))
+                .switchIfEmpty(Mono.error(new CustomerNotFoundException(command.customerId())))
+                .flatMap(customer -> {
+                    customerDomainService.updateCustomer(customer, command.familyName(), command.givenName());
+                    return customerRepository.save(customer);
+                })
+                .map(customer -> new UpdateCustomerResult(
+                        customer.getId().value(),
+                        customer.getUsername(),
+                        customer.getFamilyName(),
+                        customer.getGivenName(),
+                        customer.getEmail().value(),
+                        customer.getPhoneNumber().value()
+                ));
     }
 }

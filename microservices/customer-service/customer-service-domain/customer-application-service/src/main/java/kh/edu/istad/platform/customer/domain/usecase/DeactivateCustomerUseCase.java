@@ -8,6 +8,7 @@ import kh.edu.istad.platform.customer.domain.port.out.CustomerRepository;
 import kh.edu.istad.platform.customer.domain.service.CustomerDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
@@ -18,11 +19,13 @@ public class DeactivateCustomerUseCase {
     private final CustomerRepository customerRepository;
     private final CustomerDomainService customerDomainService;
 
-    public CustomerDeactivatedEvent execute(UUID customerId) {
-        Customer customer = customerRepository.findById(new CustomerId(customerId))
-                .orElseThrow(() -> new CustomerNotFoundException(customerId));
-        CustomerDeactivatedEvent event = customerDomainService.deactivateCustomer(customer);
-        customerRepository.save(customer);
-        return event;
+    public Mono<CustomerDeactivatedEvent> execute(UUID customerId) {
+        return customerRepository.findById(new CustomerId(customerId))
+                .switchIfEmpty(Mono.error(new CustomerNotFoundException(customerId)))
+                .flatMap(customer -> {
+                    CustomerDeactivatedEvent event = customerDomainService.deactivateCustomer(customer);
+                    return customerRepository.save(customer)
+                            .thenReturn(event);
+                });
     }
 }

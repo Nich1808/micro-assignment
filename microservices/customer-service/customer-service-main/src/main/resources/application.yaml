@@ -5,4 +5,4 @@ spring:
   application:
     name: customer-service
   mongodb:
-    uri: mongodb://mongod:mongod@localhost:27017/istad_customer?authSource=admin
+    uri: mongodb://mongod:mongod@localhost:2027/istad_customer?authSource=admin

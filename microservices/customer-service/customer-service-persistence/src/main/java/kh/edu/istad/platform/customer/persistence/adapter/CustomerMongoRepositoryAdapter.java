@@ -8,8 +8,7 @@ import kh.edu.istad.platform.customer.persistence.mapper.CustomerPersistenceMapp
 import kh.edu.istad.platform.customer.persistence.repository.CustomerMongoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,16 +18,15 @@ public class CustomerMongoRepositoryAdapter implements CustomerRepository {
     private final CustomerPersistenceMapper customerPersistenceMapper;
 
     @Override
-    public Customer save(Customer customer) {
+    public Mono<Customer> save(Customer customer) {
         CustomerDocument document = customerPersistenceMapper.toDocument(customer);
-        customerMongoRepository.save(document).block();
-        return customer;
+        return customerMongoRepository.save(document)
+                .map(customerPersistenceMapper::toDomain);
     }
 
     @Override
-    public Optional<Customer> findById(CustomerId id) {
+    public Mono<Customer> findById(CustomerId id) {
         return customerMongoRepository.findById(id.value().toString())
-                .map(customerPersistenceMapper::toDomain)
-                .blockOptional();
+                .map(customerPersistenceMapper::toDomain);
     }
 }

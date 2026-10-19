@@ -4,4 +4,6 @@ plugins {
 
 dependencies {
     api project(':customer-service-domain:customer-domain-core')
+    implementation 'io.projectreactor:reactor-core'
+
 }
