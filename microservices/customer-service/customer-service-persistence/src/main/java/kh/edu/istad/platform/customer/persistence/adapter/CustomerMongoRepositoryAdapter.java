@@ -8,6 +8,7 @@ import kh.edu.istad.platform.customer.persistence.mapper.CustomerPersistenceMapp
 import kh.edu.istad.platform.customer.persistence.repository.CustomerMongoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -28,5 +29,16 @@ public class CustomerMongoRepositoryAdapter implements CustomerRepository {
     public Mono<Customer> findById(CustomerId id) {
         return customerMongoRepository.findById(id.value().toString())
                 .map(customerPersistenceMapper::toDomain);
+    }
+
+    @Override
+    public Flux<Customer> findAll() {
+        return customerMongoRepository.findAll()
+                .map(customerPersistenceMapper::toDomain);
+    }
+
+    @Override
+    public Mono<Void> deleteById(CustomerId id) {
+        return customerMongoRepository.deleteById(id.value().toString());
     }
 }
