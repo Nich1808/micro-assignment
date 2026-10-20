@@ -52,11 +52,11 @@ public class CustomerController {
     // 🚀 Dynamic Filtering Endpoint ថ្មីដែលបានបន្ថែម
     @GetMapping("/filter")
     public Flux<CustomerInitiateResponse> filterCustomers(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String phoneNumber,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String segmentId
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "segmentId", required = false) String segmentId
     ) {
         CustomerFilterCriteria criteria = CustomerFilterCriteria.builder()
                 .name(name)
