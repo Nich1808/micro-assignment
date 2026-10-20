@@ -18,8 +18,10 @@ public class BeanConfig {
     }
 
     @Bean
-    public InitiateCustomerUseCase initiateCustomerUseCase(CustomerRepository customerRepository) {
-        return new InitiateCustomerUseCase(customerRepository);
+    public InitiateCustomerUseCase initiateCustomerUseCase(
+            CustomerDomainService customerDomainService,
+            CustomerRepository customerRepository) {
+        return new InitiateCustomerUseCase(customerDomainService, customerRepository);
     }
 
     @Bean

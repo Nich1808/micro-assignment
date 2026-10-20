@@ -31,49 +31,16 @@ import java.util.UUID;
 public class CustomerController {
 
     private final InitiateCustomerUseCase initiateCustomerUseCase;
-    private final UpdateCustomerUseCase updateCustomerUseCase;
-    private final DeactivateCustomerUseCase deactivateCustomerUseCase;
     private final CustomerWebMapper customerWebMapper;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Mono<ResponseEntity<CustomerInitiateResponse>> createNewCustomer(@RequestBody @Valid CustomerInitiateRequest request) {
-        log.info("Processing creation request for new customer...");
-        InitiateCustomerCommand command = customerWebMapper.toCommand(request);
-
-        return initiateCustomerUseCase.execute(command)
-                .map(customerWebMapper::toResponse)
-                .map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response));
-    }
-
-    @PutMapping("/{id}")
-    public Mono<CustomerUpdateResponse> modifyCustomer(
-            @PathVariable("id") UUID customerId,
-            @Valid @RequestBody CustomerUpdateRequest updatePayload
-    ) {
-        log.info("Processing update request for customer ID: {}", customerId);
-        return updateCustomerUseCase.execute(
-                new UpdateCustomerCommand(customerId, updatePayload.familyName(), updatePayload.givenName())
-        ).map(customerWebMapper::toResponse);
-    }
-
-    @ExceptionHandler(CustomerNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleCustomerNotFound() {
-        log.warn("Target customer could not be found in the system.");
-    }
-
-    @ExceptionHandler(CustomerDomainException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public void handleCustomerDomainConflict() {
-        log.error("A domain rule violation conflict occurred.");
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public Mono<CustomerDeactivatedEvent> deactivateAccount(
-            @PathVariable("id") UUID customerId
-    ) {
-        log.info("Processing deactivation request for customer ID: {}", customerId);
-        return deactivateCustomerUseCase.execute(customerId);
+    public CustomerInitiateResponse initiateResponse(
+            @RequestBody CustomerInitiateRequest customerInitiateRequest
+    ){
+        InitiateCustomerResult result = initiateCustomerUseCase.execute(
+                customerWebMapper.toCommand(customerInitiateRequest)
+        );
+        return  customerWebMapper.toResponse(result);
     }
 }

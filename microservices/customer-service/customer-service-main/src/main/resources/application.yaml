@@ -6,3 +6,4 @@ spring:
     name: customer-service
   mongodb:
     uri: mongodb://mongod:mongod@localhost:2027/istad_customer?authSource=admin
+    uuid-representation: standard

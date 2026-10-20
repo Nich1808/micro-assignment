@@ -20,8 +20,11 @@ public class CustomerMongoRepositoryAdapter implements CustomerRepository {
 
     @Override
     public Mono<Customer> save(Customer customer) {
-        CustomerDocument document = customerPersistenceMapper.toDocument(customer);
-        return customerMongoRepository.save(document)
+        CustomerDocument customerDocument = customerPersistenceMapper.toDocument(customer);
+        if (customerDocument == null) {
+            return Mono.error(new IllegalArgumentException("CustomerDocument must not be null"));
+        }
+        return customerMongoRepository.save(customerDocument)
                 .map(customerPersistenceMapper::toDomain);
     }
 
