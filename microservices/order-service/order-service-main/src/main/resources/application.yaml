@@ -1,6 +1,8 @@
 server:
   port: ${ORDER_PORT:1810}
 spring:
+  main:
+    web-application-type: reactive
   application:
     name: order-service
   datasource:
