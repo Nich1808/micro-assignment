@@ -1,5 +1,6 @@
 package kh.edu.istad.platform.customer.restapi.controller;
 
+import kh.edu.istad.platform.customer.domain.dto.CustomerFilterCriteria;
 import kh.edu.istad.platform.customer.domain.dto.UpdateCustomerCommand;
 import kh.edu.istad.platform.customer.domain.usecase.DeactivateCustomerUseCase;
 import kh.edu.istad.platform.customer.domain.usecase.FindCustomerUseCase;
@@ -48,6 +49,27 @@ public class CustomerController {
                 .map(customerWebMapper::toResponse);
     }
 
+    // 🚀 Dynamic Filtering Endpoint ថ្មីដែលបានបន្ថែម
+    @GetMapping("/filter")
+    public Flux<CustomerInitiateResponse> filterCustomers(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String segmentId
+    ) {
+        CustomerFilterCriteria criteria = CustomerFilterCriteria.builder()
+                .name(name)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .status(status)
+                .segmentId(segmentId)
+                .build();
+
+        return findCustomerUseCase.findByCriteria(criteria)
+                .map(customerWebMapper::toResponse);
+    }
+
     @GetMapping("/{id}")
     public Mono<CustomerInitiateResponse> getCustomerById(@PathVariable("id") String id) {
         return findCustomerUseCase.findById(id)
@@ -59,7 +81,6 @@ public class CustomerController {
             @PathVariable("id") String id,
             @RequestBody @Valid CustomerUpdateRequest request
     ) {
-        // បម្លែង id និង request ទៅជា UpdateCustomerCommand តាមរយៈ Mapper
         UpdateCustomerCommand command = customerWebMapper.toCommand(UUID.fromString(id), request);
 
         return updateCustomerUseCase.execute(command)
