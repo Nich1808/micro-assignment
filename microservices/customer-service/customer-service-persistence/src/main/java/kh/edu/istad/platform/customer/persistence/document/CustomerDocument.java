@@ -21,12 +21,12 @@ import java.time.Instant;
 public class CustomerDocument implements Persistable<String> {
 
     @Id
-    private CustomerId customerId; // 👈 រក្សា CustomerId Value Object ទុកដដែល
+    private CustomerId customerId;
     private String username;
     private String familyName;
     private String givenName;
-    private Email email;           // 👈 រក្សា Email Value Object ទុកដដែល
-    private PhoneNumber phoneNumber;// 👈 រក្សា PhoneNumber Value Object ទុកដដែល
+    private Email email;
+    private PhoneNumber phoneNumber;
     private CustomerStatus status;
 
     @CreatedBy
