@@ -76,6 +76,7 @@ public class CustomerController {
                 .map(customerWebMapper::toResponse);
     }
 
+
     @PutMapping("/{id}")
     public Mono<CustomerUpdateResponse> updateCustomer(
             @PathVariable("id") String id,
