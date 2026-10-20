@@ -24,14 +24,32 @@ public class CustomerMongoRepositoryAdapter implements CustomerRepository {
         if (customerDocument == null) {
             return Mono.error(new IllegalArgumentException("CustomerDocument must not be null"));
         }
-        return customerMongoRepository.save(customerDocument)
+
+        String idStr = customerDocument.getId();
+        if (idStr == null) {
+            return customerMongoRepository.save(customerDocument)
+                    .map(customerPersistenceMapper::toDomain);
+        }
+
+        // ឆែកមើលថាតើ Document នេះមានស្រាប់ក្នុង Database ហើយឬยัง
+        return customerMongoRepository.existsById(idStr)
+                .flatMap(exists -> {
+                    customerDocument.setNewDocument(!exists); // បើមានហើយ គឺ false (Update), បើអត់ទิញទេ គឺ true (Insert)
+                    return customerMongoRepository.save(customerDocument);
+                })
                 .map(customerPersistenceMapper::toDomain);
     }
 
     @Override
     public Mono<Customer> findById(CustomerId id) {
+        if (id == null || id.value() == null) {
+            return Mono.empty();
+        }
         return customerMongoRepository.findById(id.value().toString())
-                .map(customerPersistenceMapper::toDomain);
+                .map(doc -> {
+                    doc.setNewDocument(false); // ទាញចេញពី DB មកត្រូវតែជា Update
+                    return customerPersistenceMapper.toDomain(doc);
+                });
     }
 
     @Override
@@ -42,6 +60,9 @@ public class CustomerMongoRepositoryAdapter implements CustomerRepository {
 
     @Override
     public Mono<Void> deleteById(CustomerId id) {
+        if (id == null || id.value() == null) {
+            return Mono.empty();
+        }
         return customerMongoRepository.deleteById(id.value().toString());
     }
 }

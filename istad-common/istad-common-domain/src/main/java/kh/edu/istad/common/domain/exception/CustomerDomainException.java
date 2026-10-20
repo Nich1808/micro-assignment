@@ -1,4 +1,4 @@
-package kh.edu.istad.common.domain.Exception;
+package kh.edu.istad.common.domain.exception;
 
 public class CustomerDomainException extends RuntimeException {
     public CustomerDomainException(String message) {

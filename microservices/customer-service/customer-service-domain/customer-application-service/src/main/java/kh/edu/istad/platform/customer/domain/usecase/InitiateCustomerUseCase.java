@@ -30,7 +30,10 @@ public class InitiateCustomerUseCase {
                 .phoneNumber(new PhoneNumber(command.phoneNumber()))
                 .build();
 
-        customer.initiateCustomer();
+        // ❌ លុបបន្ទាត់នេះចេញ៖ customer.initiateCustomer();
+
+        // ✅ ទុកឱ្យ Domain Service ជាអ្នកจัดการជំនួស
+        customerDomainService.initiateCustomer(customer);
 
         return customerRepository.save(customer);
     }

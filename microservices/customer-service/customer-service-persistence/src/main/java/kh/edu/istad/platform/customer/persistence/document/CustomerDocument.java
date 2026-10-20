@@ -15,8 +15,8 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
+@Builder
 @Document(collection = "customers")
 public class CustomerDocument implements Persistable<String> {
 
@@ -41,13 +41,17 @@ public class CustomerDocument implements Persistable<String> {
     @LastModifiedDate
     private Instant modifiedAt;
 
+    @Transient
+    @Builder.Default
+    private boolean newDocument = true;
+
     @Override
     public @Nullable String getId() {
-        return customerId != null ? customerId.value().toString() : null; // 👈 ផ្ដល់តម្លៃ ID ពិតប្រាកដជា String
+        return customerId != null && customerId.value() != null ? customerId.value().toString() : null;
     }
 
     @Override
     public boolean isNew() {
-        return createdAt == null; // ឬ ឆែក customerId == null
+        return this.newDocument;
     }
 }
