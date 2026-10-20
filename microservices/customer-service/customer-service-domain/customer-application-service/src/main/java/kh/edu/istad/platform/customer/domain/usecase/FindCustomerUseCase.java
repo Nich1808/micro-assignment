@@ -2,6 +2,7 @@ package kh.edu.istad.platform.customer.domain.usecase;
 
 import kh.edu.istad.common.domain.valueobject.CustomerId;
 import kh.edu.istad.platform.customer.domain.dto.CustomerFilterCriteria;
+import kh.edu.istad.platform.customer.domain.dto.CustomerStatisticsResponse;
 import kh.edu.istad.platform.customer.domain.entity.Customer;
 import kh.edu.istad.platform.customer.domain.exception.CustomerDomainException;
 import kh.edu.istad.platform.customer.domain.port.out.CustomerCustomRepository;
@@ -33,5 +34,8 @@ public class FindCustomerUseCase {
 
     public Flux<Customer> findByCriteria(CustomerFilterCriteria criteria) {
         return customerCustomRepository.findByCriteria(criteria);
+    }
+    public Flux<CustomerStatisticsResponse> getCustomerStatistics() {
+        return customerCustomRepository.getCustomerStatistics();
     }
 }

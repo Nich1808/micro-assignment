@@ -1,5 +1,8 @@
 package kh.edu.istad.platform.customer.persistence.adapter;
 
+
+import kh.edu.istad.platform.customer.domain.dto.CustomerStatisticsResponse;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import kh.edu.istad.platform.customer.domain.dto.CustomerFilterCriteria;
 import kh.edu.istad.platform.customer.domain.entity.Customer;
 import kh.edu.istad.platform.customer.domain.port.out.CustomerCustomRepository;
@@ -21,6 +24,24 @@ public class CustomerCustomRepositoryImpl implements CustomerCustomRepository {
 
     private final ReactiveMongoTemplate reactiveMongoTemplate;
     private final CustomerPersistenceMapper customerPersistenceMapper;
+
+
+    @Override
+    public Flux<CustomerStatisticsResponse> getCustomerStatistics() {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.group("status", "segmentId")
+                        .count().as("totalCustomers"),
+                Aggregation.project("totalCustomers")
+                        .and("_id.status").as("status")
+                        .and("_id.segmentId").as("segmentId")
+        );
+
+        return reactiveMongoTemplate.aggregate(
+                aggregation,
+                CustomerDocument.class,
+                CustomerStatisticsResponse.class
+        );
+    }
 
     @Override
     public Flux<Customer> findByCriteria(CustomerFilterCriteria criteria) {
@@ -50,4 +71,5 @@ public class CustomerCustomRepositoryImpl implements CustomerCustomRepository {
         return reactiveMongoTemplate.find(query, CustomerDocument.class)
                 .map(customerPersistenceMapper::toDomain);
     }
+
 }

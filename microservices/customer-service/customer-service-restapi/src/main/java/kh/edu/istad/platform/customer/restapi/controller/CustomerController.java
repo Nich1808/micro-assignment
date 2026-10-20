@@ -1,6 +1,7 @@
 package kh.edu.istad.platform.customer.restapi.controller;
 
 import kh.edu.istad.platform.customer.domain.dto.CustomerFilterCriteria;
+import kh.edu.istad.platform.customer.domain.dto.CustomerStatisticsResponse;
 import kh.edu.istad.platform.customer.domain.dto.UpdateCustomerCommand;
 import kh.edu.istad.platform.customer.domain.usecase.DeactivateCustomerUseCase;
 import kh.edu.istad.platform.customer.domain.usecase.FindCustomerUseCase;
@@ -93,5 +94,10 @@ public class CustomerController {
     public Mono<Void> deactivateCustomer(@PathVariable("id") String id) {
         return deactivateCustomerUseCase.execute(UUID.fromString(id))
                 .then();
+    }
+
+    @GetMapping("/statistics")
+    public Flux<CustomerStatisticsResponse> getCustomerStatistics() {
+        return findCustomerUseCase.getCustomerStatistics();
     }
 }
