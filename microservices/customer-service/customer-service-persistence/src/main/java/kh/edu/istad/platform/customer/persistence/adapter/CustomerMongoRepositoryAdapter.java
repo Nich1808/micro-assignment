@@ -31,10 +31,10 @@ public class CustomerMongoRepositoryAdapter implements CustomerRepository {
                     .map(customerPersistenceMapper::toDomain);
         }
 
-        // ឆែកមើលថាតើ Document នេះមានស្រាប់ក្នុង Database ហើយឬยัง
+
         return customerMongoRepository.existsById(idStr)
                 .flatMap(exists -> {
-                    customerDocument.setNewDocument(!exists); // បើមានហើយ គឺ false (Update), បើអត់ទิញទេ គឺ true (Insert)
+                    customerDocument.setNewDocument(!exists);
                     return customerMongoRepository.save(customerDocument);
                 })
                 .map(customerPersistenceMapper::toDomain);
