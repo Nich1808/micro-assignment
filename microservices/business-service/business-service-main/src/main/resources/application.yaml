@@ -1,7 +1,28 @@
+
 server:
-  port: ${BUSINESS_PORT:1802}
+  port: 1813
+
 spring:
   application:
     name: business-service
-  mongodb:
-    uri: ${PAYMENT_MONGO_URI:mongodb://mongod:mongod@127.0.0.1:27017/istad_payment?authSource=admin}
+  data:
+    mongodb:
+      uri: mongodb://mongod:mongod@127.0.0.1:2027/istad_payment?authSource=admin
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

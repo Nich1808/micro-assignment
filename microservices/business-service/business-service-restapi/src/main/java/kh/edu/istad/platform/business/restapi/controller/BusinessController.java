@@ -1,8 +1,9 @@
-package kh.edu.istad.platform.business.restapi;
+package kh.edu.istad.platform.business.restapi.controller;
 
 import kh.edu.istad.platform.business.application.CreateBusinessCommand;
 import kh.edu.istad.platform.business.application.CreateBusinessUseCase;
 import jakarta.validation.Valid;
+import kh.edu.istad.platform.business.restapi.dto.CreateBusinessRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

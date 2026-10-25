@@ -1,6 +1,7 @@
 package kh.edu.istad.platform.order.restapi;
 
 import jakarta.validation.Valid;
+
 import kh.edu.istad.platform.order.application.CreateOrderCommand;
 import kh.edu.istad.platform.order.application.CreateOrderUseCase;
 import kh.edu.istad.platform.order.domain.Order;
@@ -24,6 +25,7 @@ import java.util.UUID;
 public class OrderController {
 
     private final CreateOrderUseCase createOrderUseCase;
+    private final OrderPaymentClient orderPaymentClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -46,6 +48,14 @@ public class OrderController {
         );
 
         Order createdOrder = createOrderUseCase.execute(orderCommand);
+
+        var payment = orderPaymentClient.createPayment(
+                createdOrder.id(),
+                createdOrder.customerId(),
+                createdOrder.total()
+        );
+
+        log.info("Payment created successfully: {}", payment.paymentId());
 
         return new OrderResponse(
                 createdOrder.id(),

@@ -1,4 +1,4 @@
-package kh.edu.istad.platform.business.restapi;
+package kh.edu.istad.platform.business.restapi.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

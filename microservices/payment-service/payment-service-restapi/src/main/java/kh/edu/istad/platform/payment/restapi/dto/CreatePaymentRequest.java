@@ -1,4 +1,4 @@
-package kh.edu.istad.platform.payment.restapi;
+package kh.edu.istad.platform.payment.restapi.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;

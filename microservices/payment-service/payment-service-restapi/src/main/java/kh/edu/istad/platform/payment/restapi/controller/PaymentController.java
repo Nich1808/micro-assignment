@@ -1,8 +1,9 @@
-package kh.edu.istad.platform.payment.restapi;
+package kh.edu.istad.platform.payment.restapi.controller;
 
 import kh.edu.istad.platform.payment.application.CreatePaymentCommand;
 import kh.edu.istad.platform.payment.application.CreatePaymentUseCase;
 import jakarta.validation.Valid;
+import kh.edu.istad.platform.payment.restapi.dto.CreatePaymentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
