@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
+
+
 import kh.edu.istad.platform.order.domain.Order;
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -5,10 +5,15 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 dependencyResolutionManagement {
-    repositories { mavenCentral() }
+    repositories {
+        mavenCentral()
+    }
 }
+
 rootProject.name = 'order-service'
+
 include 'order-service-main'
 include 'order-service-domain:order-domain-core'
 include 'order-service-domain:order-application-service'

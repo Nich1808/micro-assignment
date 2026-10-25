@@ -1,6 +1,13 @@
+
 plugins {
     id 'spring-common-conventions'
 }
+
 dependencies {
-    api 'kh.edu.istad:order-application-services'
+    api project(':order-service-domain:order-application-service')
+    api project(':order-service-domain:order-domain-core')
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation project(':order-service-domain:order-application-service')
+    runtimeOnly 'org.postgresql:postgresql'
+
 }

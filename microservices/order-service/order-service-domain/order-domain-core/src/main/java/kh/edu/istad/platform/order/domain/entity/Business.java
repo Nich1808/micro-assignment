@@ -6,12 +6,24 @@ import kh.edu.istad.common.domain.valueobject.BusinessId;
 import java.util.List;
 
 public class Business extends AggregateRoot<BusinessId> {
-    private final List<Product> product;
+    private final List<Product> products;
     private Boolean active;
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
 
     private Business(Builder builder) {
         super.setId(builder.id);
-        product = builder.product;
+        products = builder.products;
         active = builder.active;
     }
 
@@ -22,7 +34,7 @@ public class Business extends AggregateRoot<BusinessId> {
 
     public static final class Builder {
         private BusinessId id;
-        private List<Product> product;
+        private List<Product> products;
         private Boolean active;
 
         private Builder() {
@@ -33,8 +45,8 @@ public class Business extends AggregateRoot<BusinessId> {
             return this;
         }
 
-        public Builder product(List<Product> val) {
-            product = val;
+        public Builder products(List<Product> val) {
+            products = val;
             return this;
         }
 
@@ -46,17 +58,5 @@ public class Business extends AggregateRoot<BusinessId> {
         public Business build() {
             return new Business(this);
         }
-    }
-
-    public List<Product> getProduct() {
-        return product;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 }
