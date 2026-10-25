@@ -1,4 +1,6 @@
-plugins { id 'spring-common-conventions' }
+plugins {
+    id 'spring-common-conventions'
+}
 dependencies {
-    api project(':order-service-domain:order-domain-core')
+    implementation 'kh.edu.istad:order-domain-core'
 }
